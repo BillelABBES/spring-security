@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'false'
+
+  datasource:
+    password: root
+    username: root
+    url: jdbc:mysql://localhost:8889/security_project
