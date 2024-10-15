@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserImplem implements UserService {
     @Autowired
@@ -32,5 +34,15 @@ public class UserImplem implements UserService {
        String encodedPassword = passwordEncoder.encode(user.getPassword());
        user.setPassword(encodedPassword);
        return userRepository.save(user);
+    }
+
+    @Override
+    public String login(String email, String password) {
+        return "";
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
