@@ -1,6 +1,7 @@
 package com.doranco.security.controllers;
 
 import com.doranco.security.entities.User;
+import com.doranco.security.security.JwtService;
 import com.doranco.security.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ public class AuthController {
     UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    JwtService jwtService;
 
     @PostMapping("create-prof")
     public ResponseEntity createProf (@RequestBody User user){
@@ -48,6 +51,7 @@ public class AuthController {
         if (!passwordEncoder.matches(password, user.get().getPassword()))
             return new ResponseEntity("Mot de passe incorrect", HttpStatus.UNAUTHORIZED);
 
-        return null;
+        String jwt = jwtService.generateToken(user.get());
+        return ResponseEntity.ok(jwt);
     }
 }
