@@ -1,12 +1,18 @@
 package com.doranco.security.controllers;
 
 import com.doranco.security.entities.Course;
-import com.doranco.security.repositories.CourseRepository;
+import com.doranco.security.enums.RoleEnum;
 import com.doranco.security.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,9 +31,35 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity createCourse (@RequestBody Course course){
+    @PreAuthorize("hasAuthority('PROF')")
+    public ResponseEntity createCourse (@RequestBody Course course, Authentication authentication){
+//        if (!isUserProf(authentication))
+//            return new ResponseEntity("Vous n'avez pas le droit", HttpStatus.FORBIDDEN);
+
         return ResponseEntity.ok(
                 courseService.createCourse(course)
         );
     }
+
+    public boolean isUserProf(Authentication authentication){
+        boolean isProf = false;
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        for (GrantedAuthority authority : authorities){
+            if (authority.getAuthority().equals(RoleEnum.PROF.toString()))
+                isProf = true;
+        }
+        return isProf;
+    }
+
+    public boolean isUserStudent(Authentication authentication){
+        boolean isStudent = false;
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        for (GrantedAuthority authority : authorities){
+            if (authority.getAuthority().equals(RoleEnum.STUDENT.toString()))
+                isStudent = true;
+        }
+        return isStudent;
+    }
+
+
 }

@@ -32,7 +32,7 @@ public class AuthController {
         );
     }
 
-    @PostMapping("create-Student")
+    @PostMapping("create-student")
     public ResponseEntity createStudent (@RequestBody User user){
         return ResponseEntity.ok(
                 userService.createStudent(user)
