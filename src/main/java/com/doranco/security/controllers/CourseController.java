@@ -3,6 +3,7 @@ package com.doranco.security.controllers;
 import com.doranco.security.entities.Course;
 import com.doranco.security.enums.RoleEnum;
 import com.doranco.security.services.CourseService;
+import com.doranco.security.utils.UserRoleExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,33 +34,11 @@ public class CourseController {
     @PostMapping
     @PreAuthorize("hasAuthority('PROF')")
     public ResponseEntity createCourse (@RequestBody Course course, Authentication authentication){
-//        if (!isUserProf(authentication))
+//        if (!UserRoleExtractor.isUserProf(authentication))
 //            return new ResponseEntity("Vous n'avez pas le droit", HttpStatus.FORBIDDEN);
 
         return ResponseEntity.ok(
                 courseService.createCourse(course)
         );
     }
-
-    public boolean isUserProf(Authentication authentication){
-        boolean isProf = false;
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (GrantedAuthority authority : authorities){
-            if (authority.getAuthority().equals(RoleEnum.PROF.toString()))
-                isProf = true;
-        }
-        return isProf;
-    }
-
-    public boolean isUserStudent(Authentication authentication){
-        boolean isStudent = false;
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (GrantedAuthority authority : authorities){
-            if (authority.getAuthority().equals(RoleEnum.STUDENT.toString()))
-                isStudent = true;
-        }
-        return isStudent;
-    }
-
-
 }
